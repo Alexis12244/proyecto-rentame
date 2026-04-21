@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Crear publicación</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Imagen:</label>
+    <input type="file" name="imagen" class="form-control" required>
+
+    <label>Comentario:</label>
+    <textarea name="comentario" class="form-control" required></textarea>
+
+    <br>
+
+    <button class="btn btn-green">Publicar</button>
+</form>
+
+{% endblock %}

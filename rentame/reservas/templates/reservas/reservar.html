@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Reservar {{ cabana.nombre }}</h2>
+
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Fecha entrada:</label>
+    <input type="date" name="fecha_entrada" class="form-control" required>
+
+    <label>Fecha salida:</label>
+    <input type="date" name="fecha_salida" class="form-control" required>
+
+    <br>
+
+    <p id="dias"></p>
+    <p id="total"></p>
+
+    <button class="btn btn-green">Reservar</button>
+</form>
+
+<hr>
+
+<h4>Disponibilidad</h4>
+<div id="calendario"></div>
+
+
+
+<script>
+const precio = {{ cabana.costo_por_noche }};
+let ocupadas = {{ fechas_ocupadas|safe }};
+
+// ============================
+// CALCULAR DÍAS Y TOTAL
+// ============================
+document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("change", calcular);
+});
+
+function calcular() {
+    let f1 = document.querySelector("[name=fecha_entrada]").value;
+    let f2 = document.querySelector("[name=fecha_salida]").value;
+
+    if (f1 && f2) {
+        let d1 = new Date(f1);
+        let d2 = new Date(f2);
+
+        let dias = (d2 - d1) / (1000 * 60 * 60 * 24);
+
+        if (dias > 0) {
+            document.getElementById("dias").innerText = "Días: " + dias;
+            document.getElementById("total").innerText = "Total: $" + (dias * precio);
+        }
+    }
+}
+
+// ============================
+// BLOQUEAR INPUTS
+// ============================
+function fechaOcupada(fecha) {
+    return ocupadas.some(r => {
+        return fecha >= r.start && fecha < r.end;
+    });
+}
+
+document.querySelectorAll("input[type='date']").forEach(input => {
+    input.addEventListener("change", function() {
+        let f = this.value;
+
+        if (fechaOcupada(f)) {
+            alert("Fecha ocupada");
+            this.value = "";
+        }
+    });
+});
+
+// ============================
+// CALENDARIO FULLCALENDAR
+// ============================
+document.addEventListener('DOMContentLoaded', function() {
+
+    let calendarEl = document.getElementById('calendario');
+
+    let eventos = ocupadas.map(r => {
+        return {
+            title: "Ocupado",
+            start: r.start,
+            end: r.end,
+            color: '#ff4d4d'
+        };
+    });
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        selectable: true,
+        events: eventos,
+
+        select: function(info) {
+
+            let inicio = info.startStr;
+            let fin = info.endStr;
+
+            let conflicto = ocupadas.some(r => {
+                return (inicio < r.end && fin > r.start);
+            });
+
+            if (conflicto) {
+                alert("Fechas ocupadas");
+                return;
+            }
+
+            // Llenar inputs automáticamente
+            document.querySelector("[name=fecha_entrada]").value = inicio;
+            document.querySelector("[name=fecha_salida]").value = fin;
+
+            calcular();
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
+{% endblock %}

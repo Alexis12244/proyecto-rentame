@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Catálogo de Cabañas</h2>
+
+<div class="row">
+
+    <!-- FILTROS -->
+    <div class="col-md-3">
+        <div class="sidebar">
+            <h5>Filtros</h5>
+
+            <p>Precio por noche</p>
+            <input type="checkbox"> $500 - $1500 <br>
+            <input type="checkbox"> $1500 - $2500 <br>
+
+            <hr>
+
+            <p>Capacidad</p>
+            <input type="checkbox"> 1-2 personas <br>
+            <input type="checkbox"> 3-4 personas <br>
+
+            <hr>
+
+            <button class="btn btn-green w-100">Aplicar filtros</button>
+        </div>
+    </div>
+
+    <!-- CABAÑAS -->
+    <div class="col-md-9">
+        <div class="row">
+
+            {% for cabana in cabanas %}
+            <div class="col-md-4 mb-4">
+                <div class="card-cabana">
+
+                    {% if cabana.imagenes.first %}
+
+                        <img src="{{ cabana.imagenes.first.imagen.url }}"
+                            class="img-fluid"
+                            style="height:200px; object-fit:cover; width:100%;">
+
+                    {% else %}
+
+                        <img src="https://via.placeholder.com/400x200"
+                            class="img-fluid">
+
+                    {% endif %}
+
+                    <div class="p-3">
+                        <h5>{{ cabana.nombre }}</h5>
+                        <p class="mb-1">
+
+                            {% with promedio=cabana.promedio_calificacion %}
+
+                                {% for i in "12345" %}
+
+                                    {% if forloop.counter <= promedio %}
+                                        ⭐
+                                    {% else %}
+                                        ☆
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                <small>
+                                    ({{ promedio }} / 5)
+                                </small>
+
+                            {% endwith %}
+
+                        </p>
+                        <p>{{ cabana.capacidad }} personas</p>
+
+                        <p class="price">$ {{ cabana.costo_por_noche }} / noche</p>
+
+                        <a href="/cabana/{{ cabana.id }}/" class="btn btn-green btn-sm">
+                            Ver detalles
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

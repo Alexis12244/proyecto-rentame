@@ -1,0 +1,11 @@
+Django==6.0.1
+django-ckeditor==6.7.3
+django-js-asset==3.1.2
+pillow==12.1.1
+PyMySQL==1.1.0
+cryptography==46.0.5
+asgiref==3.11.0
+sqlparse==0.5.5
+tzdata==2025.3
+cffi==2.0.0
+pycparser==3.0
