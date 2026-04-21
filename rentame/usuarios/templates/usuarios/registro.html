@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="registro-box">
+
+        <h2 class="text-center mb-4">Registro</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="btn btn-success w-100">
+                Registrarse
+            </button>
+        </form>
+
+        <p class="text-center mt-3">
+            ¿Ya tienes cuenta?
+            <a href="/usuarios/login/">Inicia sesión</a>
+        </p>
+
+    </div>
+</div>
+
+<style>
+    .registro-box {
+        background-color: #f8f9fa; /* color del cuadro */
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        margin: auto;
+    }
+
+    body {
+        background-color: #e1d9d2; /* fondo de toda la página */
+    }
+
+    .registro-box p {
+        margin-bottom: 15px;
+    }
+</style>
+
+{% endblock %}

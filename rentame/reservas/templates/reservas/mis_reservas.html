@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Mis Reservas</h2>
+
+<div class="row">
+{% for r in reservas %}
+
+    <div class="col-md-4 mb-4">
+        <div class="card-cabana">
+
+            <img src="{{ r.cabana.imagen.url }}" class="img-fluid">
+
+            <div class="p-3">
+                <h5>{{ r.cabana.nombre }}</h5>
+
+                <p>
+                    📅 {{ r.fecha_entrada }} <br>
+                    📅 {{ r.fecha_salida }}
+                </p>
+
+                <p class="price">
+                    Total: $ {{ r.total }}
+                </p>
+                <a href="/cancelar-reserva/{{ r.id }}/" class="btn btn-red btn-sm">
+                    Cancelar reserva
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+{% empty %}
+
+    <p>No tienes reservas aún 😢</p>
+
+{% endfor %}
+</div>
+
+{% endblock %}

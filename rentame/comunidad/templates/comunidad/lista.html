@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Comunidad</h2>
+
+<a href="/comunidad/crear/" class="btn btn-green mb-3">Publicar</a>
+
+{% for p in publicaciones %}
+    <div class="card p-3 mb-3">
+        <p>{{ p.usuario }}</p>
+
+        <img src="{{ p.imagen.url }}" style="width: 150px; height: auto;">
+
+        <p>{{ p.comentario }}</p>
+    </div>
+{% endfor %}
+
+{% endblock %}
